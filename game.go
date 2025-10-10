@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/rand"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -27,7 +28,11 @@ func (s Slot) String() string {
 	return " " + sis
 }
 
-func newBoard(rowsNum, colsNum int) (Board, int) {
+func newBoard(rowsNum, colsNum int) Board {
+	if rowsNum > 10 || colsNum > 10 {
+		panic("board works with up to `10 * 10`, not more")
+	}
+
 	piecesNum := rowsNum * colsNum
 
 	board := make(Board, 0, piecesNum)
@@ -36,7 +41,7 @@ func newBoard(rowsNum, colsNum int) (Board, int) {
 	}
 	board = append(board, Empty)
 
-	return board, piecesNum
+	return board
 }
 
 /*
@@ -61,12 +66,11 @@ cn-1   cn  cn+1
 type Board = []Slot
 
 func NewGame(rowsNum, colsNum int) Game {
-	b, size := newBoard(rowsNum, colsNum)
 	game := Game{
 		RowsNum: rowsNum,
 		ColsNum: colsNum,
-		B:       b,
-		emptyI:  size - 1,
+		B:       newBoard(rowsNum, colsNum),
+		EmptyI:  rowsNum*colsNum - 1,
 	}
 	return game
 }
@@ -75,20 +79,20 @@ func NewGame(rowsNum, colsNum int) Game {
 type Game struct {
 	RowsNum, ColsNum int
 	B                Board
-	emptyI           int
+	EmptyI           int
 }
 
 func (g Game) String() string {
 	var builder strings.Builder
 
 	for ri := range g.RowsNum {
-		builder.WriteRune('\n')
 		for ci := range g.ColsNum {
 			slot := g.B[(g.ColsNum*(ri))+(ci)]
 
 			builder.WriteString(slot.String())
 			builder.WriteRune(' ')
 		}
+		builder.WriteRune('\n')
 	}
 
 	return builder.String()
@@ -107,7 +111,9 @@ func (g *Game) MoveOnBard(movement BoardMovement) {
 	var emptyIChange int
 	switch movement {
 	case MoveUpToEmpty:
-		// if I'm moving up to the empty, then I want to switch the empty down a row
+		// if I'm moving up to the empty,
+		// then I want to switch the empty down a row
+		// etc
 		emptyIChange = g.ColsNum
 	case MoveDownToEmpty:
 		emptyIChange = -g.ColsNum
@@ -117,10 +123,10 @@ func (g *Game) MoveOnBard(movement BoardMovement) {
 		emptyIChange = -1
 	}
 
-	iToSwitchWithEmpty := g.emptyI + emptyIChange
+	iToSwitchWithEmpty := g.EmptyI + emptyIChange
 
 	// row = floor(i / cols_num)
-	emptyRow := g.emptyI / g.ColsNum
+	emptyRow := g.EmptyI / g.ColsNum
 	toSwitchRow := iToSwitchWithEmpty / g.ColsNum
 
 	movingHorizontally :=
@@ -140,16 +146,21 @@ func (g *Game) MoveOnBard(movement BoardMovement) {
 	}
 
 	// now switch the empty slot with the slot that should be in the empty now
-	g.B[g.emptyI], g.B[iToSwitchWithEmpty] = g.B[iToSwitchWithEmpty], g.B[g.emptyI]
-	g.emptyI = iToSwitchWithEmpty
+	g.B[g.EmptyI], g.B[iToSwitchWithEmpty] = g.B[iToSwitchWithEmpty], g.B[g.EmptyI]
+	g.EmptyI = iToSwitchWithEmpty
 }
 
 func (g *Game) Mix() {
-	stepsNum := 100
+	// ? is there a better way to mix a board?
+	stepsNum := 1111 // seems to be enough even for a 10*10
 	moveOpts := [...]BoardMovement{MoveUpToEmpty, MoveDownToEmpty, MoveLeftToEmpty, MoveRightToEmpty}
 
 	for range stepsNum {
 		i := rand.Intn(len(moveOpts))
 		g.MoveOnBard(moveOpts[i])
 	}
+}
+
+func (g Game) Won() bool {
+	return reflect.DeepEqual(g.B, newBoard(g.RowsNum, g.ColsNum))
 }
