@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math/rand"
 	"strconv"
 	"strings"
 )
@@ -61,12 +62,13 @@ type Board = []Slot
 
 func NewGame(rowsNum, colsNum int) Game {
 	b, size := newBoard(rowsNum, colsNum)
-	return Game{
+	game := Game{
 		RowsNum: rowsNum,
 		ColsNum: colsNum,
 		B:       b,
 		emptyI:  size - 1,
 	}
+	return game
 }
 
 // Represent a Sliding-Puzzle game
@@ -117,11 +119,37 @@ func (g *Game) MoveOnBard(movement BoardMovement) {
 
 	iToSwitchWithEmpty := g.emptyI + emptyIChange
 
+	// row = floor(i / cols_num)
+	emptyRow := g.emptyI / g.ColsNum
+	toSwitchRow := iToSwitchWithEmpty / g.ColsNum
+
+	movingHorizontally :=
+		movement == MoveLeftToEmpty ||
+			movement == MoveRightToEmpty
+
+	if emptyRow != toSwitchRow && movingHorizontally {
+		// if not in same row,
+		// means moved right/left on an edge and shifted over to next row
+		// which should not be possible
+		return
+	}
+
 	if iToSwitchWithEmpty < 0 || iToSwitchWithEmpty >= g.RowsNum*g.ColsNum {
+		// if out of bounds
 		return
 	}
 
 	// now switch the empty slot with the slot that should be in the empty now
 	g.B[g.emptyI], g.B[iToSwitchWithEmpty] = g.B[iToSwitchWithEmpty], g.B[g.emptyI]
 	g.emptyI = iToSwitchWithEmpty
+}
+
+func (g *Game) Mix() {
+	stepsNum := 100
+	moveOpts := [...]BoardMovement{MoveUpToEmpty, MoveDownToEmpty, MoveLeftToEmpty, MoveRightToEmpty}
+
+	for range stepsNum {
+		i := rand.Intn(len(moveOpts))
+		g.MoveOnBard(moveOpts[i])
+	}
 }
