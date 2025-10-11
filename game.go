@@ -2,7 +2,7 @@ package main
 
 import (
 	"math/rand"
-	"reflect"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -154,13 +154,14 @@ func (g *Game) Mix() {
 	// ? is there a better way to mix a board?
 	stepsNum := 1111 // seems to be enough even for a 10*10
 	moveOpts := [...]BoardMovement{MoveUpToEmpty, MoveDownToEmpty, MoveLeftToEmpty, MoveRightToEmpty}
+	moveOptsNum := len(moveOpts)
 
 	for range stepsNum {
-		i := rand.Intn(len(moveOpts))
+		i := rand.Intn(moveOptsNum)
 		g.MoveOnBard(moveOpts[i])
 	}
 }
 
 func (g Game) Won() bool {
-	return reflect.DeepEqual(g.B, newBoard(g.RowsNum, g.ColsNum))
+	return slices.Equal(g.B, newBoard(g.RowsNum, g.ColsNum))
 }
