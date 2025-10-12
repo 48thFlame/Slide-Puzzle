@@ -3,8 +3,6 @@ package main
 import (
 	"math/rand"
 	"slices"
-	"strconv"
-	"strings"
 )
 
 type Slot uint
@@ -12,21 +10,6 @@ type Slot uint
 const (
 	Empty Slot = iota
 )
-
-func (s Slot) String() string {
-	if s == Empty {
-		return "  "
-	}
-
-	si := int(s)
-	sis := strconv.Itoa(si)
-
-	if si >= 10 {
-		return sis
-	}
-
-	return " " + sis
-}
 
 func newBoard(rowsNum, colsNum int) Board {
 	if rowsNum > 10 || colsNum > 10 {
@@ -80,22 +63,6 @@ type Game struct {
 	RowsNum, ColsNum int
 	B                Board
 	EmptyI           int
-}
-
-func (g Game) String() string {
-	var builder strings.Builder
-
-	for ri := range g.RowsNum {
-		for ci := range g.ColsNum {
-			slot := g.B[(g.ColsNum*(ri))+(ci)]
-
-			builder.WriteString(slot.String())
-			builder.WriteRune(' ')
-		}
-		builder.WriteRune('\n')
-	}
-
-	return builder.String()
 }
 
 type BoardMovement uint8

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -44,12 +43,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	var res strings.Builder
-
-	res.WriteString(m.game.String())
-	res.WriteString(fmt.Sprintf("Did win: %v\n", m.game.Won()))
-
-	return res.String()
+	return ViewWindow(m)
 }
 
 func main() {
