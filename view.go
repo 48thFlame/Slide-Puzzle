@@ -3,6 +3,7 @@ package main
 import (
 	"strconv"
 
+	"github.com/48thFlame/Slide-Puzzle/slide"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
 )
@@ -13,8 +14,8 @@ const (
 	footerColor = lipgloss.Color("#444444")
 )
 
-func (s Slot) String() string {
-	if s == Empty {
+func slotToString(s slide.Slot) string {
+	if s == slide.Empty {
 		return "  "
 	}
 
@@ -28,15 +29,15 @@ func (s Slot) String() string {
 	return " " + sis
 }
 
-func viewSlot(s Slot) string {
+func viewSlot(s slide.Slot) string {
 	return lipgloss.NewStyle().
 		Bold(true).
 		Foreground(whiteColor).
-		Render(s.String())
+		Render(slotToString(s))
 }
 
 // creates a lipgloss table - which is the grid of the sliding puzzle
-func createBoardGrid(g Game) *table.Table {
+func createBoardGrid(g slide.Game) *table.Table {
 	boardTableGrid := table.New().
 		Border(lipgloss.DoubleBorder()).
 		BorderRow(true).
@@ -58,7 +59,7 @@ func createBoardGrid(g Game) *table.Table {
 	return boardTableGrid
 }
 
-func ViewGame(g Game) string {
+func ViewGame(g slide.Game) string {
 	bg := createBoardGrid(g)
 	return bg.String()
 }

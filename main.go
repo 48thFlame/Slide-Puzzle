@@ -8,44 +8,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-func newModel(rowsNum, colsNum int) model {
-	return model{game: NewGame(rowsNum, colsNum)}
-}
-
-type model struct {
-	game Game
-}
-
-func (m model) Init() tea.Cmd {
-	return nil
-}
-
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "ctrl+c", "q":
-			return m, tea.Quit
-		case "m":
-			m.game.Mix()
-		case "up", "w":
-			m.game.MoveOnBard(MoveUpToEmpty)
-		case "down", "s":
-			m.game.MoveOnBard(MoveDownToEmpty)
-		case "left", "a":
-			m.game.MoveOnBard(MoveLeftToEmpty)
-		case "right", "d":
-			m.game.MoveOnBard(MoveRightToEmpty)
-		}
-	}
-
-	return m, nil
-}
-
-func (m model) View() string {
-	return ViewWindow(m)
-}
-
 func main() {
 	var rowsNum, colsNum int
 
