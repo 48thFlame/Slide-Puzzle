@@ -74,52 +74,6 @@ const (
 	MoveRightToEmpty
 )
 
-// TODO: make it combined with MoveOnBoard
-func (g Game) legalMove(move BoardMovement) bool {
-	var emptyIChange int
-	switch move {
-	case MoveUpToEmpty:
-		// if I'm moving up to the empty,
-		// then I want to switch the empty down a row
-		// etc
-		emptyIChange = g.ColsNum
-	case MoveDownToEmpty:
-		emptyIChange = -g.ColsNum
-	case MoveLeftToEmpty:
-		emptyIChange = 1
-	case MoveRightToEmpty:
-		emptyIChange = -1
-	}
-
-	iToSwitchWithEmpty := g.EmptyI + emptyIChange
-
-	// row = floor(i / cols_num)
-	emptyRow := g.EmptyI / g.ColsNum
-	toSwitchRow := iToSwitchWithEmpty / g.ColsNum
-
-	movingHorizontally :=
-		move == MoveLeftToEmpty ||
-			move == MoveRightToEmpty
-
-	if emptyRow != toSwitchRow && movingHorizontally {
-		// if not in same row,
-		// means moved right/left on an edge and shifted over to next row
-		// which should not be possible
-		return false
-	}
-
-	if iToSwitchWithEmpty < 0 || iToSwitchWithEmpty >= g.RowsNum*g.ColsNum {
-		// if out of bounds
-		return false
-	}
-
-	// // now switch the empty slot with the slot that should be in the empty now
-	// g.B[g.EmptyI], g.B[iToSwitchWithEmpty] = g.B[iToSwitchWithEmpty], g.B[g.EmptyI]
-	// g.EmptyI = iToSwitchWithEmpty
-
-	return true
-}
-
 // applies the move, return bool whether was successful (was the move legal)
 func (g *Game) MoveOnBard(movement BoardMovement) {
 	var emptyIChange int
