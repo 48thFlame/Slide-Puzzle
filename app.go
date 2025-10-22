@@ -41,15 +41,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	windowView := ViewWindow(m)
+	windowView := viewWindow(m)
+	windowWidth := lipgloss.Width(windowView)
 	windowHeight := lipgloss.Height(windowView)
 
-	aiView := lipgloss.NewStyle().
-		Border(lipgloss.ThickBorder()).
-		BorderForeground(purpleColor).
-		Foreground(whiteColor).
-		Height(windowHeight - 2). // -2 for the border
-		Render(slide.AiOutput(m.game))
+	aiView := viewAi(m.game, windowWidth, windowHeight)
 
 	return lipgloss.JoinHorizontal(lipgloss.Right, windowView, aiView)
 }

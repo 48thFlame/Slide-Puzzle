@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/48thFlame/Slide-Puzzle/slide"
@@ -59,12 +60,22 @@ func createBoardGrid(g slide.Game) *table.Table {
 	return boardTableGrid
 }
 
-func ViewGame(g slide.Game) string {
-	bg := createBoardGrid(g)
-	return bg.String()
+func moveToString(m slide.BoardMovement) (s string) {
+	switch m {
+	case slide.MoveUpToEmpty:
+		s = "Move Up   "
+	case slide.MoveDownToEmpty:
+		s = "Move Down "
+	case slide.MoveLeftToEmpty:
+		s = "Move Left "
+	case slide.MoveRightToEmpty:
+		s = "Move Right"
+	}
+
+	return
 }
 
-func ViewWindow(m model) string {
+func viewWindow(m model) string {
 	border := lipgloss.NewStyle().
 		Border(lipgloss.ThickBorder()).
 		BorderForeground(purpleColor).
@@ -78,17 +89,52 @@ func ViewWindow(m model) string {
 
 	footer := lipgloss.NewStyle().
 		Foreground(footerColor).
-		// Background(whiteColor).
 		Render("q: quit • m: mix")
+
+	game := createBoardGrid(m.game).String()
 
 	window := border.Render(
 		lipgloss.JoinVertical(
 			lipgloss.Center,
 			title,
-			ViewGame(m.game),
+			game,
 			footer,
 		),
 	)
 
 	return window
+}
+
+func viewAi(g slide.Game, width, height int) string {
+	border := lipgloss.NewStyle().
+		Border(lipgloss.ThickBorder()).
+		BorderForeground(purpleColor).
+		Width(width).
+		Height(height-2). // -2 for the border
+		AlignHorizontal(lipgloss.Center).
+		Padding(0, 1)
+
+	title := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(whiteColor).
+		Background(purpleColor).
+		Render("Ai Solution")
+
+	var aiStr []string
+
+	if aiOut := slide.AiOutput(g); aiOut != nil {
+		aiStr = []string{
+			"",
+			"Do:",
+			moveToString(aiOut.Move),
+			"",
+			"Length:",
+			fmt.Sprint(aiOut.NumOfM)}
+	} else {
+		aiStr = []string{"", "", "Solved!"}
+	}
+
+	return border.Render(
+		lipgloss.JoinVertical(lipgloss.Center,
+			append([]string{title}, aiStr...)...))
 }

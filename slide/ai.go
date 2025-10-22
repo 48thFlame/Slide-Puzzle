@@ -1,12 +1,17 @@
 package slide
 
-import "fmt"
+type AiSolMove struct {
+	Move   BoardMovement
+	NumOfM int
+}
 
-func AiOutput(g Game) string {
+// using a pointer as a "maybe" type
+func AiOutput(g Game) *AiSolMove {
 	solution := BFSNotRecur(g)
-	if len(solution) == 0 {
-		return "Solved"
+	lenSol := len(solution)
+	if lenSol == 0 {
+		return nil
 	} else {
-		return fmt.Sprintln(solution[0])
+		return &AiSolMove{Move: solution[0], NumOfM: lenSol}
 	}
 }
