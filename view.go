@@ -122,7 +122,9 @@ func viewAi(g slide.Game, width, height int) string {
 
 	var aiStr []string
 
-	if aiOut := slide.AiOutput(g); aiOut != nil {
+	aiOutFlag, aiOut := slide.AiOutput(g)
+	switch aiOutFlag {
+	case slide.SolMove:
 		aiStr = []string{
 			"",
 			"Do:",
@@ -130,8 +132,10 @@ func viewAi(g slide.Game, width, height int) string {
 			"",
 			"Length:",
 			fmt.Sprint(aiOut.NumOfM)}
-	} else {
+	case slide.Solved:
 		aiStr = []string{"", "", "Solved!"}
+	case slide.CantSolve:
+		aiStr = []string{"", "Sorry", "Not", "Attempting", "That"}
 	}
 
 	return border.Render(

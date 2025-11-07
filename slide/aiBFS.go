@@ -2,14 +2,26 @@ package slide
 
 // Breadth First Search Recursive
 func BFSRecur(g Game) []BoardMovement {
-	sol := doBFS([]bfsNode{{g: g}}, make(map[string]struct{}))
-	return sol.moveSeq
+	if isSafeToBFS(g) {
+		sol := doBFS([]bfsNode{{g: g}}, make(map[string]struct{}))
+		return sol.moveSeq
+	} else {
+		return nil
+	}
 }
 
 // Breadth First Search Not Recursive (sadly no tail call optimization in go)
 func BFSNotRecur(g Game) []BoardMovement {
-	sol := doBFSNotRecursive(g)
-	return sol.moveSeq
+	if isSafeToBFS(g) {
+		sol := doBFSNotRecursive(g)
+		return sol.moveSeq
+	} else {
+		return nil
+	}
+}
+
+func isSafeToBFS(g Game) bool {
+	return g.RowsNum*g.ColsNum <= 10
 }
 
 type bfsNode struct {
@@ -60,7 +72,7 @@ func doBFS(toVisit []bfsNode, seenAlready map[string]struct{}) bfsNode {
 }
 
 func doBFSNotRecursive(g Game) bfsNode {
-	toVisit := []bfsNode{{g: g}}
+	toVisit := []bfsNode{{g: g, moveSeq: make([]BoardMovement, 0)}} // need to initialize the moveSeq so won't be `nil`
 	seenAlready := make(map[string]struct{})
 
 	for {
