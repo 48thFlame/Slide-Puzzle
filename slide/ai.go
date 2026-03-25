@@ -1,5 +1,10 @@
 package slide
 
+const (
+	numOfStepsToMixBoard = 2000
+	cellsLimitForBFS     = 10
+)
+
 type AiOutFlags uint8
 
 const (
@@ -13,7 +18,11 @@ type AiOut struct {
 	NumOfM int
 }
 
-// using a pointer as a "maybe" type
+// func AiOutput(g Game) int
+// 	return misplacedTiles(g){
+// }
+
+// using a pointer as a "maybe" type (this way can use nil as a value)
 func AiOutput(g Game) (AiOutFlags, *AiOut) {
 	solution := BFSNotRecur(g)
 

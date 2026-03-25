@@ -55,3 +55,16 @@ func (m BoardMovement) String() (s string) {
 
 	return
 }
+
+func (aiOF AiOutFlags) String() (s string) {
+	switch aiOF {
+	case Solved:
+		s = "Solved"
+	case CantSolve:
+		s = "CantSolve"
+	case SolMove:
+		s = "SolMove"
+	}
+
+	return
+}

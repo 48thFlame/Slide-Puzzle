@@ -120,7 +120,7 @@ func (g *Game) MoveOnBard(movement BoardMovement) {
 
 func (g *Game) Mix() {
 	// ? is there a better way to mix a board?
-	stepsNum := 1111 // seems to be enough even for a 10*10
+	stepsNum := numOfStepsToMixBoard // seems to be enough even for a 10*10
 	moveOpts := [...]BoardMovement{MoveUpToEmpty, MoveDownToEmpty, MoveLeftToEmpty, MoveRightToEmpty}
 	moveOptsNum := len(moveOpts)
 

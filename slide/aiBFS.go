@@ -21,7 +21,8 @@ func BFSNotRecur(g Game) []BoardMovement {
 }
 
 func isSafeToBFS(g Game) bool {
-	return g.RowsNum*g.ColsNum <= 10
+	// I found that bigger takes too much time and memory to brute force the solution
+	return g.RowsNum*g.ColsNum <= cellsLimitForBFS
 }
 
 type bfsNode struct {
