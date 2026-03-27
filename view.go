@@ -134,7 +134,9 @@ func viewAi(g slide.Game, width, height int) string {
 			fmt.Sprint(aiOut.NumOfM)}
 	case slide.Solved:
 		aiStr = []string{"", "", "Solved!"}
-	case slide.CantSolve:
+	case slide.Unsolvable:
+		aiStr = []string{"", "This", "Position", "Is", "Unsolvable"}
+	case slide.TooHardCantSolve:
 		aiStr = []string{"", "Sorry", "Not", "Attempting", "That"}
 	}
 

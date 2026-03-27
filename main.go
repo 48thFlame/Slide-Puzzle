@@ -44,6 +44,8 @@ func getRowsColsNumArgs(args []string) (rowsNum, colsNum int, e error) {
 }
 
 func main() {
+	// _test()
+	// return
 	// starting from the first user provided arg
 	rowsNum, colsNum, err := getRowsColsNumArgs(os.Args[1:])
 	if err != nil {

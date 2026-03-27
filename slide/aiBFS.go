@@ -1,27 +1,8 @@
 package slide
 
-// Breadth First Search Recursive
-func BFSRecur(g Game) []BoardMovement {
-	if isSafeToBFS(g) {
-		sol := doBFS([]bfsNode{{g: g}}, make(map[string]struct{}))
-		return sol.moveSeq
-	} else {
-		return nil
-	}
-}
-
-// Breadth First Search Not Recursive (sadly no tail call optimization in go)
-func BFSNotRecur(g Game) []BoardMovement {
-	if isSafeToBFS(g) {
-		sol := doBFSNotRecursive(g)
-		return sol.moveSeq
-	} else {
-		return nil
-	}
-}
-
+// I found that bigger takes too much time and memory to brute force the solution
+// 10 cells which is also (5*2)!/2 ~= 1.8 million positions seems still reasonable
 func isSafeToBFS(g Game) bool {
-	// I found that bigger takes too much time and memory to brute force the solution
 	return g.RowsNum*g.ColsNum <= cellsLimitForBFS
 }
 
@@ -45,7 +26,7 @@ func (node bfsNode) children() []bfsNode {
 		})
 }
 
-func doBFS(toVisit []bfsNode, seenAlready map[string]struct{}) bfsNode {
+func _doBFSRec(toVisit []bfsNode, seenAlready map[string]struct{}) bfsNode {
 	// pop the first to visit
 	checking := toVisit[0]
 
@@ -69,7 +50,7 @@ func doBFS(toVisit []bfsNode, seenAlready map[string]struct{}) bfsNode {
 	} else {
 	}
 
-	return doBFS(toVisit, seenAlready)
+	return _doBFSRec(toVisit, seenAlready)
 }
 
 func doBFSNotRecursive(g Game) bfsNode {

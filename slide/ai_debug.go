@@ -60,8 +60,10 @@ func (aiOF AiOutFlags) String() (s string) {
 	switch aiOF {
 	case Solved:
 		s = "Solved"
-	case CantSolve:
-		s = "CantSolve"
+	case Unsolvable:
+		s = "Unsolvable"
+	case TooHardCantSolve:
+		s = "TooHardCantSolve"
 	case SolMove:
 		s = "SolMove"
 	}

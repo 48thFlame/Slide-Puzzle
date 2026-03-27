@@ -2,14 +2,15 @@ package slide
 
 const (
 	numOfStepsToMixBoard = 2000
-	cellsLimitForBFS     = 10
+	cellsLimitForBFS     = 10 // see comment in isSafeToBFS()
 )
 
 type AiOutFlags uint8
 
 const (
 	Solved AiOutFlags = iota
-	CantSolve
+	Unsolvable
+	TooHardCantSolve
 	SolMove
 )
 
@@ -18,18 +19,18 @@ type AiOut struct {
 	NumOfM int
 }
 
-// func AiOutput(g Game) int
-// 	return misplacedTiles(g){
-// }
-
 // using a pointer as a "maybe" type (this way can use nil as a value)
 func AiOutput(g Game) (AiOutFlags, *AiOut) {
-	solution := BFSNotRecur(g)
-
-	if solution == nil {
-		// means board is too big
-		return CantSolve, nil
+	if !Solvable(g) {
+		return Unsolvable, nil
 	}
+	if !isSafeToBFS(g) {
+		return TooHardCantSolve, nil
+	}
+
+	// sol := _doBFSRec([]bfsNode{{g: g}}, make(map[string]struct{}))
+	solutionBFSNode := doBFSNotRecursive(g)
+	solution := solutionBFSNode.moveSeq
 
 	lenSol := len(solution)
 	if lenSol == 0 {
