@@ -6,8 +6,8 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-func newModel(rowsNum, colsNum int) model {
-	return model{game: slide.NewGame(rowsNum, colsNum)}
+func newModel(g slide.Game) model {
+	return model{game: g}
 }
 
 type model struct {

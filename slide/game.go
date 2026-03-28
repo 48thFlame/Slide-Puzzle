@@ -48,6 +48,15 @@ cn-1   cn  cn+1
 */
 type Board = []Slot
 
+func NewGameManual(rowsNum, colsNum int, b Board, emptyI int) Game {
+	return Game{
+		RowsNum: rowsNum,
+		ColsNum: colsNum,
+		B:       b,
+		EmptyI:  emptyI,
+	}
+}
+
 func NewGame(rowsNum, colsNum int) Game {
 	game := Game{
 		RowsNum: rowsNum,

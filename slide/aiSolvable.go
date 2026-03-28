@@ -2,17 +2,37 @@ package slide
 
 import "slices"
 
-// these 2 functions, cyclesNum and mhtDist
-// each take turns changing by one every switch on the board (every turn)
-// however mhtDist starts at 0 and cyclesNum 1
-// therefore one if them should always be odd and one even
-// if not - means pos is unsolvable
-// see https://www.lukelavalva.com/theoryofsliding
 func Solvable(g Game) bool {
+	if !allPieces(g) {
+		return false
+	}
+
+	// these 2 functions, cyclesNum and mhtDist
+	// each take turns changing by one every switch on the board (every turn)
+	// however mhtDist starts at 0 and cyclesNum 1
+	// therefore one if them should always be odd and one even
+	// if not - means pos is unsolvable
+	// see https://www.lukelavalva.com/theoryofsliding
 	md := mhtDist(g)
 	noc, _ := numOfCycles(g)
 
 	return (md+noc)%2 != 0
+}
+
+func allPieces(g Game) bool {
+	solvedBoard := newBoard(g.RowsNum, g.ColsNum)
+
+	if len(g.B) != len(solvedBoard) {
+		return false
+	}
+
+	for _, piece := range solvedBoard {
+		if !slices.Contains(g.B, piece) {
+			return false
+		}
+	}
+
+	return true
 }
 
 // mht dist - how far the empty slot is far from starting pos
