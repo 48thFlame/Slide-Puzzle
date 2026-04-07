@@ -1,13 +1,31 @@
 package main
 
+import (
+	"fmt"
+
+	"github.com/48thFlame/Slide-Puzzle/slide"
+)
+
 func _test() {
-	// g := slide.NewGame(2, 3)
+	// g := slide.NewGame(3, 3)
 	// g := slide.Game{
-	// 	RowsNum: 2,
+	// 	RowsNum: 3,
 	// 	ColsNum: 3,
-	// 	B:       []slide.Slot{1, 2, 3, 4, 5, 0},
-	// 	EmptyI:  5,
+	// 	B:       []slide.Slot{1, 2, 3, 4, 6, 5, 7, 0, 8},
+	// 	EmptyI:  8,
 	// }
+	// g.Mix()
+	g := slide.NewGame(5, 5)
+	g.MoveOnBard(slide.MoveDownToEmpty)
+	g.MoveOnBard(slide.MoveDownToEmpty)
+	g.MoveOnBard(slide.MoveRightToEmpty)
+	g.MoveOnBard(slide.MoveRightToEmpty)
+	g.MoveOnBard(slide.MoveDownToEmpty)
+	// g.MoveOnBard(slide.MoveDownToEmpty)
+
+	fmt.Println(g)
+	a, b := slide.PuzzleSize(g)
+	fmt.Println(a, b)
 
 	// g := slide.Game{
 	// 	RowsNum: 2,

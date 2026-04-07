@@ -24,18 +24,19 @@ func AiOutput(g Game) (AiOutFlags, *AiOut) {
 	if !Solvable(g) {
 		return Unsolvable, nil
 	}
-	if !isSafeToBFS(g) {
-		return TooHardCantSolve, nil
+
+	if isSafeToBFS(g) {
+		// sol := _doBFSRec([]bfsNode{{g: g}}, make(map[string]struct{}))
+		solutionBFSNode := doBFSNotRecursive(g)
+		solution := solutionBFSNode.moveSeq
+
+		lenSol := len(solution)
+		if lenSol == 0 {
+			return Solved, nil
+		} else {
+			return SolMove, &AiOut{Move: solution[0], NumOfM: lenSol}
+		}
 	}
 
-	// sol := _doBFSRec([]bfsNode{{g: g}}, make(map[string]struct{}))
-	solutionBFSNode := doBFSNotRecursive(g)
-	solution := solutionBFSNode.moveSeq
-
-	lenSol := len(solution)
-	if lenSol == 0 {
-		return Solved, nil
-	} else {
-		return SolMove, &AiOut{Move: solution[0], NumOfM: lenSol}
-	}
+	return TooHardCantSolve, nil
 }

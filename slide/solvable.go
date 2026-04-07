@@ -2,7 +2,10 @@ package slide
 
 import "slices"
 
+// solvable - checks if the given board position is solvable
+// not all possible arrangements of a grid of numbers can be slid back to solved position
 func Solvable(g Game) bool {
+	// a solvable board needs to have all the pieces
 	if !allPieces(g) {
 		return false
 	}
@@ -52,8 +55,6 @@ func mhtDist(g Game) (dist int) {
 
 // takes a starting index returns a slice of all indices of the permutation
 func permutation(acc []int, startingI int, board Board) []int {
-	// perm := []int{startingI}
-
 	nextI := int(board[startingI])
 	if slices.Contains(acc, nextI) {
 		return acc

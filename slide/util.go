@@ -1,7 +1,6 @@
 package slide
 
 import (
-	"slices"
 	"strconv"
 	"strings"
 )
@@ -63,20 +62,6 @@ func (g Game) legalMove(move BoardMovement) bool {
 	}
 
 	return true
-}
-
-func getLegalMoves(g Game) []BoardMovement {
-	allMoves := []BoardMovement{
-		MoveUpToEmpty,
-		MoveDownToEmpty,
-		MoveLeftToEmpty,
-		MoveRightToEmpty}
-
-	return slices.DeleteFunc(
-		allMoves,
-		func(m BoardMovement) bool {
-			return !g.legalMove(m)
-		})
 }
 
 // used to store boards in lookup tables (like in duplication checking in BFS)
