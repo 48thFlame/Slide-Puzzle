@@ -43,7 +43,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	windowView := viewWindow(m)
 	windowWidth := lipgloss.Width(windowView)
-	windowHeight := lipgloss.Height(windowView)
+	windowHeight := lipgloss.Height(windowView) - 2 // -2 for the border
 
 	aiView := viewAi(m.game, windowWidth, windowHeight)
 

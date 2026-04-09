@@ -64,8 +64,8 @@ func (aiOF AiOutFlags) String() (s string) {
 		s = "Unsolvable"
 	case TooHardCantSolve:
 		s = "TooHardCantSolve"
-	case SolMove:
-		s = "SolMove"
+	case BfsSol:
+		s = "BfsSol"
 	}
 
 	return

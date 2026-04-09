@@ -15,6 +15,10 @@ const (
 	footerColor = lipgloss.Color("#444444")
 )
 
+const (
+	minimumWindowHeight = 9
+)
+
 func slotToString(s slide.Slot) string {
 	if s == slide.Empty {
 		return "  "
@@ -79,7 +83,7 @@ func viewWindow(m model) string {
 	border := lipgloss.NewStyle().
 		Border(lipgloss.ThickBorder()).
 		BorderForeground(purpleColor).
-		Padding(0, 1)
+		Padding(0, 1).Height(minimumWindowHeight)
 
 	title := lipgloss.NewStyle().
 		Bold(true).
@@ -110,7 +114,7 @@ func viewAi(g slide.Game, width, height int) string {
 		Border(lipgloss.ThickBorder()).
 		BorderForeground(purpleColor).
 		Width(width).
-		Height(height-2). // -2 for the border
+		Height(height).
 		AlignHorizontal(lipgloss.Center).
 		Padding(0, 1)
 
@@ -122,22 +126,28 @@ func viewAi(g slide.Game, width, height int) string {
 
 	var aiStr []string
 
-	aiOutFlag, aiOut := slide.AiOutput(g)
-	switch aiOutFlag {
-	case slide.SolMove:
+	aiFlag, aiBfsOut, puzzleSize := slide.AiOutput(g)
+	switch aiFlag {
+	case slide.BfsSol:
 		aiStr = []string{
-			"",
 			"Do:",
-			moveToString(aiOut.Move),
+			moveToString(aiBfsOut.Move),
 			"",
 			"Length:",
-			fmt.Sprint(aiOut.NumOfM)}
+			fmt.Sprint(aiBfsOut.NumOfM),
+			"",
+		}
 	case slide.Solved:
 		aiStr = []string{"", "", "Solved!"}
 	case slide.Unsolvable:
-		aiStr = []string{"", "This", "Position", "Is", "Unsolvable"}
+		aiStr = []string{"This", "Position", "Is", "Unsolvable", ""}
 	case slide.TooHardCantSolve:
-		aiStr = []string{"", "Sorry", "Not", "Attempting", "That"}
+		aiStr = []string{"Sorry", "Not", "Attempting", "That", ""}
+	}
+
+	if aiFlag != slide.Solved {
+		aiStr = append(aiStr, "Mixed area:",
+			fmt.Sprintf("%drx%dc", puzzleSize[0], puzzleSize[1]))
 	}
 
 	return border.Render(

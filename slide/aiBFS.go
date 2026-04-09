@@ -3,7 +3,12 @@ package slide
 // I found that bigger takes too much time and memory to brute force the solution
 // 10 cells which is also (5*2)!/2 ~= 1.8 million positions seems still reasonable
 func isSafeToBFS(g Game) bool {
-	return g.RowsNum*g.ColsNum <= cellsLimitForBFS
+	if g.RowsNum*g.ColsNum <= boardCellsNumLimitForBFS {
+		return true
+	} else {
+		rm, cm := PuzzleSize(g)
+		return rm*cm <= cellsMixedLimitForBFS
+	}
 }
 
 func _doBFSRec(toVisit []searchNode, seenAlready map[string]struct{}) searchNode {
